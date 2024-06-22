@@ -1,0 +1,87 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template qtype_savpl/question
+
+    Classes required for JS:
+    * code-editor
+    * qvpl-buttons
+
+    Data attributes required for JS:
+    * data-text
+    * data-template
+    * data-templatelang
+    * data-action
+
+    Context variables required for this template:
+    * qid Question ID.
+    * readonly Whether this question is in readonly mode.
+    * inputname Textarea input html name.
+    * lineoffset Offset to apply to code editor.
+    * templatelang Code language of this VPL question.
+    * lastanswer Last user answer.
+    * run Whether the run action is available.
+    * execfilesrun Execution files to keep when running, as JSON string.
+    * precheck Whether the precheck action is available.
+    * precheckaction The actual action of the precheck button (debug, evaluate).
+    * execfiles Execution files for precheck, as JSON string.
+    * answertemplate Initial code answer template.
+    * correction Whether the correction is available to current user.
+    * teachercorrection Teacher correction for this question.
+
+    Example context (json):
+    {
+        "qid": "35",
+        "readonly": false,
+        "inputname": "q493:1_answer",
+        "lineoffset": 3,
+        "templatelang": "java",
+        "lastanswer": "// Comment",
+        "run": true,
+        "precheck": true,
+        "precheckaction": "debug",
+        "answertemplate": "// ",
+        "correction": true,
+        "teachercorrection": "System.out.print(\"Hello\\\\ World!\\\\n\\n\");"
+    }
+}}
+{{^ readonly}}
+<div class="qvpl-set-text">
+    <span class="float-right">
+       {{# correction}}
+       <span id="qvpl_correction_q{{qid}}" class="btn-link clickable" data-text="{{teachercorrection}}">{{# str}} correction, qtype_savpl {{/ str}}</span>
+       &nbsp;|&nbsp;
+       {{/ correction}}
+       <span id="qvpl_reset_q{{qid}}" class="btn-link clickable" data-text="{{answertemplate}}">{{# str}} reset {{/ str}}</span>
+    </span>
+</div>
+{{/ readonly}}
+<div class="code-editor" contenteditable="true" spellcheck="false">
+    <textarea name="{{inputname}}" rows="1" {{# readonly}}readonly="readonly"{{/ readonly}} data-lineoffset="{{lineoffset}}" data-templatelang="{{templatelang}}">{{lastanswer}}</textarea>
+</div>
+{{^ readonly}}
+<div id="qvpl_buttons_q{{qid}}" class="qvpl-buttons">
+{{# run}}
+<button class="btn btn-secondary mr-1 my-1" type="button" data-action="run">{{# str}} run, qtype_savpl {{/ str}}</button>
+{{/ run}}
+{{# precheck}}
+<button class="btn btn-secondary mr-1 my-1" type="button" data-action="{{precheckaction}}" title="{{# str}} precheckhelp, qtype_savpl {{/ str}}">{{# str}} precheck, qtype_savpl {{/ str}}</button>
+{{/ precheck}}
+</div>
+<pre id="terminal_wrapper_q{{qid}}" class="no-scrolling mb-0"></pre>
+<pre id="vpl_result_q{{qid}}" class="bg-white mt-1 p-2 border" style="display:none;"></pre>
+{{/ readonly}}

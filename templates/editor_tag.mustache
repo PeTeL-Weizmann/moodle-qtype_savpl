@@ -1,0 +1,218 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template qtype_savpl/editor_tag
+
+    Classes required for JS:
+    * code-editor
+    * qvpl-buttons
+
+    Data attributes required for JS:
+    * data-text
+    * data-template
+    * data-templatelang
+    * data-action
+
+    Context variables required for this template:
+    * qid Question ID.
+    * readonly Whether this question is in readonly mode.
+    * inputname Textarea input html name.
+    * lineoffset Offset to apply to code editor.
+    * templatelang Code language of this VPL question.
+    * lastanswer Last user answer.
+    * run Whether the run action is available.
+    * execfilesrun Execution files to keep when running, as JSON string.
+    * precheck Whether the precheck action is available.
+    * precheckaction The actual action of the precheck button (debug, evaluate).
+    * execfiles Execution files for precheck, as JSON string.
+    * answertemplate Initial code answer template.
+    * correction Whether the correction is available to current user.
+    * teachercorrection Teacher correction for this question.
+
+    Example context (json):
+    {
+        "tagid": "35",
+    }
+}}
+<div id="{{tagid}}" class="vpl_ide vpl_ide_root">
+    <div id="vpl_menu" class="vpl_ide_menu"></div>
+    <div id="vpl_tr" class="vpl_ide_tr">
+        <div id="vpl_filelist" style="display: none;">
+            <div id="vpl_filelist_header">{{#str}}filelist, mod_vpl{{/str}}</div>
+            <div id="vpl_filelist_content"></div>
+        </div>
+        <div id="vpl_tabs" class="vpl_ide_tabs">
+            <div id="vpl_tabs_scroll">
+                <ul id="vpl_tabs_ul"></ul>
+            </div>
+        </div>
+        <div id="vpl_results" class="vpl_ide_results">
+            <div id="vpl_results_accordion"></div>
+        </div>
+    </div>
+    <div id="vpl_ide_dialog_new" class="vpl_ide_dialog"
+         style="display: none;">
+        <fieldset>
+            <label for="vpl_ide_input_newfilename">
+                {{#str}}new_file_name, mod_vpl{{/str}}</label> <input
+                type="text" id="vpl_ide_input_newfilename"
+                name="vpl_ide_input_newfilename" value=""
+                class="ui-widget-content ui-corner-all" autofocus /><br>
+        </fieldset>
+    </div>
+    <div id="vpl_ide_dialog_rename" class="vpl_ide_dialog"
+         style="display: none;">
+        <fieldset>
+            <label for="vpl_ide_input_renamefilename">
+                {{#str}}rename{{/str}}</label> <input
+                type="text" id="vpl_ide_input_renamefilename"
+                name="vpl_ide_input_renamefilename" value=""
+                class="ui-widget-content ui-corner-all" autofocus /><br>
+        </fieldset>
+    </div>
+    <div id="vpl_ide_dialog_delete" class="vpl_ide_dialog"
+         style="display: none;">
+        <fieldset>
+            <label for="vpl_ide_input_deletefilename">
+                {{#str}}delete{{/str}}</label> <input
+                type="text" id="vpl_ide_input_deletefilename"
+                name="vpl_ide_input_deletefilename" value=""
+                class="ui-widget-content ui-corner-all" autofocus /><br>
+        </fieldset>
+    </div>
+    <div id="vpl_ide_dialog_sort" class="vpl_ide_dialog"
+         style="display: none;">
+        <ol id="vpl_sort_list"></ol>
+    </div>
+    <div id="vpl_ide_dialog_multidelete" class="vpl_ide_dialog"
+         style="display: none;">
+        <fieldset id="vpl_multidelete_list"></fieldset>
+    </div>
+    <div id="vpl_ide_dialog_fontsize" class="vpl_ide_dialog"
+         style="display: none;">
+        <div class="vpl_fontsize_slider_value"></div>
+        <div class="vpl_fontsize_slider"></div>
+    </div>
+    <div id="vpl_ide_dialog_acetheme" class="vpl_ide_dialog" style="display: none;">
+        <select>
+            <option value="ambiance">Ambiance</option>
+            <option value="chaos">Chaos</option>
+            <option value="chrome">Chrome</option>
+            <option value="clouds">Clouds</option>
+            <option value="clouds_midnight">Clouds Midnight</option>
+            <option value="cobalt">Cobalt</option>
+            <option value="crimson_editor">Crimson Editor</option>
+            <option value="dawn">Dawn</option>
+            <option value="dracula">Dracula</option>
+            <option value="dreamweaver">Dreamweaver</option>
+            <option value="eclipse">Eclipse</option>
+            <option value="github">GitHub</option>
+            <option value="gob">Gob</option>
+            <option value="gruvbox">Gruvbox</option>
+            <option value="idle_fingers">idle Fingers</option>
+            <option value="iplastic">IPlastic</option>
+            <option value="katzenmilch">Katzenmilch</option>
+            <option value="kr_theme">Kr theme</option>
+            <option value="kuroir">Kuroir</option>
+            <option value="merbivore">Merbivore</option>
+            <option value="merbivore_soft">Merbivore Soft</option>
+            <option value="mono_industrial">Mono Industrial</option>
+            <option value="monokai">Monokai</option>
+            <option value="pastel_on_dark">Pastel on dark</option>
+            <option value="solarized_dark">Solarized Dark</option>
+            <option value="solarized_light">Solarized Light</option>
+            <option value="sqlserver">SQL Server</option>
+            <option value="terminal">Terminal</option>
+            <option value="textmate">TextMate</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="tomorrow_night">Tomorrow Night</option>
+            <option value="tomorrow_night_blue">Tomorrow Night Blue</option>
+            <option value="tomorrow_night_bright">Tomorrow Night Bright</option>
+            <option value="tomorrow_night_eighties">Tomorrow Night 80s</option>
+            <option value="twilight">Twilight</option>
+            <option value="vibrant_ink">Vibrant Ink</option>
+            <option value="xcode">XCode</option>
+        </select>
+    </div>
+    <div id="vpl_ide_dialog_comments" class="vpl_ide_dialog"
+         style="display: none;">
+        <fieldset>
+            <label for="vpl_ide_input_comments">
+                {{#str}}comments, mod_vpl{{/str}}</label> <textarea
+                id="vpl_ide_input_comments" name="vpl_ide_input_comments"
+                class="ui-widget-content ui-corner-all" autofocus ></textarea>
+        </fieldset>
+    </div>
+    <div id="vpl_ide_dialog_about" class="vpl_ide_dialog"
+         style="display: none;">
+        <div>
+            <h3>IDE for VPL</h3>
+            This IDE is part of VPL <a href="http://vpl.dis.ulpgc.es"
+                                       target="_blank">Virtual Programming Lab for Moodle</a><br> Author:
+            Juan Carlos Rodríguez del Pino &lt;jcrodriguez@dis.ulpgc.es&gt;<br>
+            Licence: <a href="http://www.gnu.org/copyleft/gpl.html"
+                        target="_blank">GNU GPL v3</a><br> This software uses/includes the
+            following software under the corresponding licence:
+            <ul>
+                <li><a href="http://ace.c9.io" target="_blank">ACE</a>: an embeddable
+                    code editor written in JavaScript. Copyright (c) 2010, Ajax.org B.V.
+                    (<a href="../editor/ace9/LICENSE" target="_blank">licence</a>)</li>
+                <li><a href="https://github.com/chjj/term.js/" target="_blank">term.js</a>:
+                    A full xterm clone written in javascript. Copyright (c) 2012-2013,
+                    Christopher Jeffrey (MIT License)</li>
+                <li><a href="http://kanaka.github.io/noVNC/" target="_blank">noVNC</a>:
+                    VNC client using HTML5 (WebSockets, Canvas). noVNC is Copyright (C)
+                    2011 Joel Martin &lt;github@martintribe.org&gt; (<a
+                            href="../editor/noVNC/LICENSE.txt" target="_blank">licence</a>)</li>
+                <li>unzip.js: August Lilleaas</li>
+                <li>inflate.js: August Lilleaas and Masanao Izumo &lt;iz@onicos.co.jp&gt;</li>
+                <li><a href="https://developers.google.com/blockly" target="_blank">Blockly</a>:
+                    A library for building visual programming editors
+                    (<a href="../editor/blockly/LICENSE" target="_blank">licence</a>)</li>
+                <li><a href="https://github.com/NeilFraser/JS-Interpreter" target="_blank">JS-Interpreter</a>:
+                    A sandboxed JavaScript interpreter in JavaScript
+                    (<a href="../editor/acorn/LICENSE" target="_blank">licence</a>)</li>
+            </ul>
+        </div>
+    </div>
+    <div style="display: none;">
+        <input type="file" multiple="multiple" id="vpl_ide_input_file" />
+    </div>
+    <div id="vpl_ide_dialog_shortcuts" class="vpl_ide_dialog" style="display: none;" >
+        <div class="vpl_ide_dialog_content"></div>
+    </div>
+    <div id="vpl_dialog_terminal">
+        <pre id="vpl_terminal" class="vpl_terminal"></pre>
+    </div>
+    <div id="vpl_dialog_terminal_clipboard" class="vpl_ide_dialog vpl_clipboard" style="display: none;">
+        <div class="vpl_clipboard_label1"></div><br>
+        <textarea readonly="readonly" class="vpl_clipboard_entry1"></textarea><br>
+        <div class="vpl_clipboard_label2"></div><br>
+        <textarea class="vpl_clipboard_entry2"></textarea>
+    </div>
+    <div id="vpl_dialog_vnc_clipboard" class="vpl_ide_dialog vpl_clipboard" style="display: none;">
+        <div class="vpl_clipboard_label1"></div><br>
+        <textarea readonly="readonly" class="vpl_clipboard_entry1"></textarea><br>
+        <div class="vpl_clipboard_label2"></div><br>
+        <textarea class="vpl_clipboard_entry2"></textarea>
+    </div>
+    <div id="vpl_dialog_vnc" style="display: none;">
+        <canvas class="vpl_noVNC_canvas">
+            Canvas not supported.
+        </canvas>
+    </div>
+</div>

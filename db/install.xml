@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="question/type/savpl/db" VERSION="20190917" COMMENT="XMLDB file for Moodle question/type/savpl"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="question_savpl" COMMENT="Options for vpl questions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references question.id."/>
+        <FIELD NAME="templatelang" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false" COMMENT="Code language."/>
+        <FIELD NAME="templatefilename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Template file name."/>
+        <FIELD NAME="templatecontext" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Context code."/>
+        <FIELD NAME="runscript" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false" COMMENT="Run script type."/>
+        <FIELD NAME="debugscript" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false" COMMENT="Debug script type."/>
+        <FIELD NAME="teachercorrection" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Correction from the teacher."/>
+        <FIELD NAME="validateonsave" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Whether the teacher correction should be validated with test cases upon question save."/>
+        <FIELD NAME="answertemplate" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Template to be prefilled in student's answer form."/>
+        <FIELD NAME="execfiles" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON data of execution files."/>
+        <FIELD NAME="precheckpreference" TYPE="char" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Whether the student has access to the pre-check button (and its behavior)."/>
+        <FIELD NAME="precheckexecfiles" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON data of execution files for pre-check."/>
+        <FIELD NAME="gradingmethod" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Whether the grade for this question scales with the VPL grade."/>
+        <FIELD NAME="disablerun" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Should we display run button"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="question_savpl_answers" COMMENT="Answers for vpl questions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references question.id."/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references user.id."/>
+        <FIELD NAME="answer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Student's answer."/>
+        <FIELD NAME="filestype" TYPE="char" NOTNULL="false" SEQUENCE="false" COMMENT="Run mode (precheck or run)."/>
+        <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
